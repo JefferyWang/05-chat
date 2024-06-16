@@ -4,6 +4,7 @@ POST http://localhost:6688/api/signup
 Content-Type: application/json
 
 {
+    "workspace": "test",
     "fullname": "JefferyWang",
     "email": "111@qq.com",
     "password": "123456"
@@ -35,4 +36,10 @@ Content-Type: application/json
 ### get chat list
 
 GET http://localhost:6688/api/chat
+Authorization: Bearer {{token}}
+
+
+### get user list
+
+GET http://localhost:6688/api/users
 Authorization: Bearer {{token}}
