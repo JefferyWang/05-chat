@@ -11,16 +11,24 @@ argon2 = { version = "0.5.3", features = ["std"] }
 axum = { workspace = true }
 axum-extra = { version = "0.9.3", features = ["typed-header"] }
 chrono = { version = "0.4.38", features = ["serde"] }
+hex = "0.4.3"
 jwt-simple = { version = "0.12.9", default-features = false, features = [
     "pure-rust",
 ] }
+mime_guess = "2.0.4"
 serde = { workspace = true }
 serde_yaml = { workspace = true }
+sha1 = "0.10.6"
 sqlx = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
+tokio-util = { version = "0.7.11", features = ["io"] }
 tower = "0.4.13"
-tower-http = { version = "0.5.2", features = ["compression-full", "trace"] }
+tower-http = { version = "0.5.2", features = [
+    "compression-full",
+    "trace",
+    "fs",
+] }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 uuid = { version = "1.8.0", features = ["v7", "serde"] }

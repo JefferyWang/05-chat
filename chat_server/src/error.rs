@@ -21,6 +21,9 @@ pub enum AppError {
     #[error("chat not found: {0}")]
     NotFound(String),
 
+    #[error("io error: {0}")]
+    IOError(#[from] std::io::Error),
+
     #[error("sql error: {0}")]
     DbError(#[from] sqlx::Error),
 
@@ -40,6 +43,7 @@ impl IntoResponse for AppError {
             AppError::JWTError(_) => StatusCode::FORBIDDEN,
             AppError::CreateChatError(_) => StatusCode::BAD_REQUEST,
             AppError::NotFound(_) => StatusCode::NOT_FOUND,
+            AppError::IOError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         };
 
         (

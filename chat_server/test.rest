@@ -66,3 +66,26 @@ Authorization: Bearer {{token}}
 
 GET http://localhost:6688/api/users
 Authorization: Bearer {{token}}
+
+
+### upload files
+
+POST http://localhost:6688/api/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; filename="hello.txt"
+
+Hello, World!
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; filename="cargo.png"
+Content-Type: image/png
+
+< ./fixtures/cargo.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### get files
+
+GET http://localhost:6688/api/files/1/bc5/ff3/0faaf440731bcbc2653dcb49cf1ea6e8e1.png
+Authorization: Bearer {{token}}
