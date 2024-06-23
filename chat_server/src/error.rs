@@ -15,6 +15,12 @@ pub enum AppError {
     #[error("email already exists: {0}")]
     EmailAlreadyExists(String),
 
+    #[error("create chat error: {0}")]
+    CreateChatError(String),
+
+    #[error("chat not found: {0}")]
+    NotFound(String),
+
     #[error("sql error: {0}")]
     DbError(#[from] sqlx::Error),
 
@@ -32,6 +38,8 @@ impl IntoResponse for AppError {
             AppError::DbError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::PasswordHashError(_) => StatusCode::UNPROCESSABLE_ENTITY,
             AppError::JWTError(_) => StatusCode::FORBIDDEN,
+            AppError::CreateChatError(_) => StatusCode::BAD_REQUEST,
+            AppError::NotFound(_) => StatusCode::NOT_FOUND,
         };
 
         (
