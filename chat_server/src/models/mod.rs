@@ -1,3 +1,4 @@
+mod chat;
 mod user;
 mod workspace;
 
@@ -45,4 +46,23 @@ impl User {
             created_at: Utc::now(),
         }
     }
+}
+
+#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq)]
+pub struct Chat {
+    pub id: i64,
+    pub name: Option<String>,
+    pub r#type: ChatType,
+    pub members: Vec<i64>,
+    pub ws_id: i64,
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, sqlx::Type, Deserialize, Serialize)]
+#[sqlx(type_name = "chat_type", rename_all = "snake_case")]
+pub enum ChatType {
+    Single,
+    Group,
+    PrivateChannel,
+    PublicChannel,
 }
