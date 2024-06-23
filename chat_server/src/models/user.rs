@@ -38,6 +38,19 @@ impl AppState {
         Ok(user)
     }
 
+    #[allow(dead_code)]
+    /// Find user by id
+    pub async fn find_user_by_id(&self, id: u64) -> Result<Option<User>, AppError> {
+        let user = sqlx::query_as(
+            "SELECT id, fullname, ws_id, email, created_at FROM users WHERE id = $1",
+        )
+        .bind(id as i64)
+        .fetch_optional(&self.pool)
+        .await?;
+
+        Ok(user)
+    }
+
     /// Create a new user
     // TODO: use transaction for workspace creation and user creation
     pub async fn create_user(&self, input: &CreateUser) -> Result<User, AppError> {
