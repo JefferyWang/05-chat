@@ -56,8 +56,7 @@ mod tests {
 
     #[tokio::test]
     async fn verify_token_middleware_should_work() -> Result<()> {
-        let config = crate::AppConfig::load()?;
-        let (_tdb, state) = AppState::new_for_test(config).await?;
+        let (_tdb, state) = AppState::new_for_test().await?;
 
         let user = User::new(1, "JefferyWang", "111@qq.com");
         let token = state.ek.sign(user)?;
