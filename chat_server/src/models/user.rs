@@ -6,10 +6,9 @@ use argon2::{
 };
 use serde::{Deserialize, Serialize};
 
-pub use crate::User;
 use crate::{AppError, AppState};
-
-use super::ChatUser;
+use chat_core::ChatUser;
+pub use chat_core::User;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct CreateUser {
@@ -82,7 +81,8 @@ impl AppState {
         .await?;
 
         if ws.owner_id == 0 {
-            self.update_workspace_owner(&ws, user.id as _).await?;
+            self.update_workspace_owner(ws.id as u64, user.id as _)
+                .await?;
         }
 
         Ok(user)

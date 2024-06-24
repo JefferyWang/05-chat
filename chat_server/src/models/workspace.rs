@@ -1,6 +1,6 @@
 use crate::{AppError, AppState};
 
-use super::{ChatUser, Workspace};
+use chat_core::{ChatUser, Workspace};
 
 impl AppState {
     pub async fn create_workspace(&self, name: &str, user_id: u64) -> Result<Workspace, AppError> {
@@ -21,7 +21,7 @@ impl AppState {
 
     pub async fn update_workspace_owner(
         &self,
-        data: &Workspace,
+        id: u64,
         owner_id: u64,
     ) -> Result<Workspace, AppError> {
         // update owner_id in two cases:
@@ -36,7 +36,7 @@ impl AppState {
             "#,
         )
         .bind(owner_id as i64)
-        .bind(data.id)
+        .bind(id as i64)
         .fetch_one(&self.pool)
         .await?;
 
@@ -107,7 +107,9 @@ mod tests {
         let user = state.create_user(&input).await?;
         assert_eq!(user.ws_id, ws.id);
 
-        let ws = state.update_workspace_owner(&ws, user.id as u64).await?;
+        let ws = state
+            .update_workspace_owner(ws.id as u64, user.id as u64)
+            .await?;
         assert_eq!(ws.owner_id, user.id);
         Ok(())
     }

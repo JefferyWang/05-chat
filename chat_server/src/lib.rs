@@ -3,7 +3,6 @@ mod error;
 mod handlers;
 mod middlewares;
 mod models;
-mod utils;
 
 use anyhow::Context;
 use axum::{
@@ -11,15 +10,19 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use chat_core::utils::{DecodingKey, EncodingKey};
+use chat_core::{
+    middlewares::{set_layer, verify_token, TokenVerify},
+    User,
+};
 pub use config::AppConfig;
 pub use error::AppError;
 use handlers::*;
-use middlewares::{set_layer, verify_chat, verify_token};
+use middlewares::verify_chat;
 pub use models::*;
 use sqlx::PgPool;
 use std::{fmt::Debug, ops::Deref, sync::Arc};
 use tokio::fs;
-use utils::{DecodingKey, EncodingKey};
 
 #[derive(Debug, Clone)]
 pub(crate) struct AppState {
@@ -64,6 +67,14 @@ impl AppState {
     }
 }
 
+impl TokenVerify for AppState {
+    type Error = AppError;
+
+    fn verify(&self, token: &str) -> Result<User, Self::Error> {
+        Ok(self.dk.verify(token)?)
+    }
+}
+
 pub async fn get_router(config: AppConfig) -> Result<Router, AppError> {
     let state = AppState::try_new(config).await?;
 
@@ -84,7 +95,7 @@ pub async fn get_router(config: AppConfig) -> Result<Router, AppError> {
         .nest("/chats", chat)
         .route("/upload", post(upload_handler))
         .route("/files/:ws_id/*path", get(file_handler))
-        .layer(from_fn_with_state(state.clone(), verify_token))
+        .layer(from_fn_with_state(state.clone(), verify_token::<AppState>))
         // routes doesn't need token verification
         .route("/signin", post(signin_handler))
         .route("/signup", post(signup_handler));
