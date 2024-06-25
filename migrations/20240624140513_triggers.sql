@@ -1,7 +1,8 @@
 -- Add migration script here
 -- if chat changed, notify with chat data
 CREATE OR REPLACE FUNCTION add_to_chat()
-RETURNS TRIGGER AS $$
+    RETURNS TRIGGER
+    AS $$
 BEGIN
     RAISE NOTICE 'add_to_chat: %', NEW;
     PERFORM pg_notify('chat_updated', json_build_object(
@@ -21,11 +22,22 @@ CREATE TRIGGER add_to_chat_trigger
 
 -- if new message added, notify with message data
 CREATE OR REPLACE FUNCTION add_to_message()
-    RETURNS TRIGGER AS $$
+    RETURNS TRIGGER
+    AS $$
+DECLARE
+    USERS bigint[];
 BEGIN
     IF TG_OP = 'INSERT' THEN
         RAISE NOTICE 'add_to_message: %', NEW;
-        PERFORM pg_notify('chat_message_created', row_to_json(NEW)::TEXT);
+        -- select chat with chat_id in NEW
+        SELECT
+            members INTO USERS
+        FROM
+            chats
+        WHERE
+            id = NEW.chat_id;
+        PERFORM
+            pg_notify('chat_message_created', json_build_object('message', NEW, 'members', USERS)::TEXT);
     END IF;
     RETURN NEW;
 END;
