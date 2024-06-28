@@ -10,6 +10,21 @@ use tracing::{info, warn};
 use crate::{AppError, AppState, ChatFile, CreateMessage, ListMessages};
 use chat_core::User;
 
+#[utoipa::path(
+    post,
+    path = "/api/chats/{id}/messages",
+    params(
+        ("id" = u64, Path, description = "Chat id"),
+        ListMessages,
+    ),
+    responses(
+        (status = 201, description = "List of messages", body = Vec<Message>),
+        (status = 400, description = "Invalid input", body = ErrorOutput),
+    ),
+    security(
+        ("token" = [])
+    )
+)]
 pub(crate) async fn list_message_handler(
     State(state): State<AppState>,
     Path(id): Path<u64>,

@@ -5,20 +5,26 @@ use argon2::{
     Argon2,
 };
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::{AppError, AppState};
 use chat_core::ChatUser;
 pub use chat_core::User;
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, ToSchema)]
+/// create a user with email and password
 pub struct CreateUser {
+    /// Full name of the user
     pub fullname: String,
+    /// Email of the user
     pub email: String,
+    /// Workspace name - if not exists, create one
     pub workspace: String,
+    /// Password of the user
     pub password: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct SigninUser {
     pub email: String,
     pub password: String,

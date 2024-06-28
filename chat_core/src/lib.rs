@@ -6,8 +6,9 @@ pub use utils::*;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
+use utoipa::ToSchema;
 
-#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
 pub struct User {
     pub id: i64,
     pub ws_id: i64,
@@ -19,14 +20,14 @@ pub struct User {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
 pub struct ChatUser {
     pub id: i64,
     pub fullname: String,
     pub email: String,
 }
 
-#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
 pub struct Workspace {
     pub id: i64,
     pub name: String,
@@ -48,7 +49,7 @@ impl User {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
 pub struct Chat {
     pub id: i64,
     pub name: Option<String>,
@@ -58,7 +59,7 @@ pub struct Chat {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Debug, Clone, PartialEq, PartialOrd, sqlx::Type, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, sqlx::Type, Deserialize, Serialize, ToSchema)]
 #[sqlx(type_name = "chat_type", rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum ChatType {
@@ -68,7 +69,7 @@ pub enum ChatType {
     PublicChannel,
 }
 
-#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
 pub struct Message {
     pub id: i64,
     pub chat_id: i64,
