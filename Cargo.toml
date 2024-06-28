@@ -1,5 +1,5 @@
 [workspace]
-members = ["chat_server", "chat_core", "notify_server"]
+members = ["chat_server", "chat_core", "notify_server", "chat_test"]
 resolver = "2"
 
 [workspace.dependencies]
@@ -35,3 +35,5 @@ tower-http = { version = "0.5.2", features = [
     "trace",
     "fs",
 ] }
+chat-server = { path = "./chat_server" }
+notify-server = { path = "./notify_server" }

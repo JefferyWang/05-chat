@@ -25,12 +25,12 @@ use std::{fmt::Debug, ops::Deref, sync::Arc};
 use tokio::fs;
 
 #[derive(Debug, Clone)]
-pub(crate) struct AppState {
-    pub(crate) inner: Arc<AppStateInner>,
+pub struct AppState {
+    pub inner: Arc<AppStateInner>,
 }
 
 #[allow(unused)]
-pub(crate) struct AppStateInner {
+pub struct AppStateInner {
     pub(crate) config: AppConfig,
     pub(crate) dk: DecodingKey,
     pub(crate) ek: EncodingKey,
@@ -75,9 +75,7 @@ impl TokenVerify for AppState {
     }
 }
 
-pub async fn get_router(config: AppConfig) -> Result<Router, AppError> {
-    let state = AppState::try_new(config).await?;
-
+pub async fn get_router(state: AppState) -> Result<Router, AppError> {
     let chat = Router::new()
         .route(
             "/:id",
@@ -116,7 +114,7 @@ impl Debug for AppStateInner {
     }
 }
 
-#[cfg(test)]
+#[cfg(feature = "test-util")]
 mod test_util {
 
     use super::*;
