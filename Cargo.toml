@@ -34,6 +34,7 @@ tower-http = { version = "0.5.2", features = [
     "compression-full",
     "trace",
     "fs",
+    "cors",
 ] }
 chat-server = { path = "./chat_server" }
 notify-server = { path = "./notify_server" }
