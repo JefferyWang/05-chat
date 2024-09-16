@@ -112,5 +112,5 @@ Content-Type: application/json
 }
 
 ### get messages
-GET http://localhost:6688/api/chats/2/messages?last_id=8&limit=2
+GET http://localhost:6688/api/chats/2/messages
 Authorization: Bearer {{token}}

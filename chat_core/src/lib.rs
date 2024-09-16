@@ -24,6 +24,7 @@ pub struct User {
 }
 
 #[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct ChatUser {
     pub id: i64,
     pub fullname: String,
@@ -31,6 +32,7 @@ pub struct ChatUser {
 }
 
 #[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct Workspace {
     pub id: i64,
     pub name: String,
@@ -54,6 +56,7 @@ impl User {
 }
 
 #[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct Chat {
     pub id: i64,
     pub name: Option<String>,
@@ -65,7 +68,7 @@ pub struct Chat {
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, sqlx::Type, Deserialize, Serialize, ToSchema)]
 #[sqlx(type_name = "chat_type", rename_all = "snake_case")]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "camelCase")]
 pub enum ChatType {
     Single,
     Group,
@@ -74,6 +77,7 @@ pub enum ChatType {
 }
 
 #[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct Message {
     pub id: i64,
     pub chat_id: i64,
