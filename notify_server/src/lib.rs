@@ -7,6 +7,7 @@ use std::{ops::Deref, sync::Arc};
 
 use anyhow::Result;
 use axum::{
+    http::Method,
     middleware::from_fn_with_state,
     response::{Html, IntoResponse},
     routing::get,
@@ -22,6 +23,7 @@ pub use error::AppError;
 pub use notify::*;
 use sse::sse_handler;
 use tokio::sync::broadcast;
+use tower_http::cors::{Any, CorsLayer};
 
 pub type UserMap = Arc<DashMap<u64, broadcast::Sender<Arc<AppEvent>>>>;
 
@@ -39,11 +41,24 @@ const INDEX_HTML: &str = include_str!("../index.html");
 pub async fn get_router(config: AppConfig) -> Result<Router> {
     let state = AppState::new(config);
     setup_pg_listener(state.clone()).await?;
+
+    let cors = CorsLayer::new()
+        .allow_methods([
+            Method::GET,
+            Method::POST,
+            Method::PATCH,
+            Method::DELETE,
+            Method::PUT,
+        ])
+        .allow_headers(Any)
+        .allow_origin(Any);
+
     let app = Router::new()
         .route("/events", get(sse_handler))
         .layer(from_fn_with_state(state.clone(), verify_token::<AppState>))
         .route("/", get(index_handler))
-        .with_state(state);
+        .with_state(state)
+        .layer(cors);
     Ok(app)
 }
 

@@ -56,13 +56,15 @@ impl User {
 }
 
 #[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all(serialize = "camelCase"))]
 pub struct Chat {
     pub id: i64,
     pub name: Option<String>,
     pub r#type: ChatType,
     pub members: Vec<i64>,
+    #[serde(alias = "wsId")]
     pub ws_id: i64,
+    #[serde(alias = "createdAt")]
     pub created_at: DateTime<Utc>,
 }
 
@@ -70,19 +72,26 @@ pub struct Chat {
 #[sqlx(type_name = "chat_type", rename_all = "snake_case")]
 #[serde(rename_all = "camelCase")]
 pub enum ChatType {
+    #[serde(alias = "single")]
     Single,
+    #[serde(alias = "group")]
     Group,
+    #[serde(alias = "private_channel")]
     PrivateChannel,
+    #[serde(alias = "public_channel")]
     PublicChannel,
 }
 
 #[derive(Debug, Deserialize, Serialize, FromRow, Clone, PartialEq, ToSchema)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all(serialize = "camelCase"))]
 pub struct Message {
     pub id: i64,
+    #[serde(alias = "chatId")]
     pub chat_id: i64,
+    #[serde(alias = "senderId")]
     pub sender_id: i64,
     pub content: String,
     pub files: Vec<String>,
+    #[serde(alias = "createdAt")]
     pub created_at: DateTime<Utc>,
 }
